@@ -14,6 +14,7 @@
 
 /* Begin PBXFileReference section */
 		94621EA62EDEBE3900C94398 /* StatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		94621EF22EDF233200C94398 /* StatLogic */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = StatLogic; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -54,6 +55,7 @@
 		94621E9D2EDEBE3900C94398 = {
 			isa = PBXGroup;
 			children = (
+				94621EF22EDF233200C94398 /* StatLogic */,
 				94621EA82EDEBE3900C94398 /* StatApp */,
 				94621EA72EDEBE3900C94398 /* Products */,
 			);
@@ -122,7 +124,6 @@
 			packageReferences = (
 				94621EBE2EDEBF7000C94398 /* XCRemoteSwiftPackageReference "Charts" */,
 				94621ECB2EDEC7DE00C94398 /* XCRemoteSwiftPackageReference "PinLayout" */,
-				94621ECE2EDEC81E00C94398 /* XCLocalSwiftPackageReference "../StatLogic" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 94621EA72EDEBE3900C94398 /* Products */;
@@ -366,13 +367,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		94621ECE2EDEC81E00C94398 /* XCLocalSwiftPackageReference "../StatLogic" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../StatLogic;
-		};
-/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		94621EBE2EDEBF7000C94398 /* XCRemoteSwiftPackageReference "Charts" */ = {
