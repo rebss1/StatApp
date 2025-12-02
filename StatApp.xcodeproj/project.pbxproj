@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		94621EC02EDEBF7000C94398 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 94621EBF2EDEBF7000C94398 /* DGCharts */; };
+		94621ECD2EDEC7DE00C94398 /* PinLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 94621ECC2EDEC7DE00C94398 /* PinLayout */; };
+		94621ED02EDEC81E00C94398 /* StatLogic in Frameworks */ = {isa = PBXBuildFile; productRef = 94621ECF2EDEC81E00C94398 /* StatLogic */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		94621EA62EDEBE3900C94398 /* StatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94621ECD2EDEC7DE00C94398 /* PinLayout in Frameworks */,
+				94621EC02EDEBF7000C94398 /* DGCharts in Frameworks */,
+				94621ED02EDEC81E00C94398 /* StatLogic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = StatApp;
 			packageProductDependencies = (
+				94621EBF2EDEBF7000C94398 /* DGCharts */,
+				94621ECC2EDEC7DE00C94398 /* PinLayout */,
+				94621ECF2EDEC81E00C94398 /* StatLogic */,
 			);
 			productName = StatApp;
 			productReference = 94621EA62EDEBE3900C94398 /* StatApp.app */;
@@ -107,6 +119,11 @@
 			);
 			mainGroup = 94621E9D2EDEBE3900C94398;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				94621EBE2EDEBF7000C94398 /* XCRemoteSwiftPackageReference "Charts" */,
+				94621ECB2EDEC7DE00C94398 /* XCRemoteSwiftPackageReference "PinLayout" */,
+				94621ECE2EDEC81E00C94398 /* XCLocalSwiftPackageReference "../StatLogic" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 94621EA72EDEBE3900C94398 /* Products */;
 			projectDirPath = "";
@@ -150,9 +167,7 @@
 				INFOPLIST_FILE = StatApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -161,12 +176,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.StatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -182,9 +201,7 @@
 				INFOPLIST_FILE = StatApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -193,12 +210,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.StatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -345,6 +366,49 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		94621ECE2EDEC81E00C94398 /* XCLocalSwiftPackageReference "../StatLogic" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../StatLogic;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		94621EBE2EDEBF7000C94398 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.1.0;
+			};
+		};
+		94621ECB2EDEC7DE00C94398 /* XCRemoteSwiftPackageReference "PinLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/layoutBox/PinLayout.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.10.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		94621EBF2EDEBF7000C94398 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94621EBE2EDEBF7000C94398 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
+		};
+		94621ECC2EDEC7DE00C94398 /* PinLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94621ECB2EDEC7DE00C94398 /* XCRemoteSwiftPackageReference "PinLayout" */;
+			productName = PinLayout;
+		};
+		94621ECF2EDEC81E00C94398 /* StatLogic */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StatLogic;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 94621E9E2EDEBE3900C94398 /* Project object */;
 }
