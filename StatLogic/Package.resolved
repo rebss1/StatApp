@@ -1,24 +1,6 @@
 {
-  "originHash" : "04568403e5e5c7b89ae96d3623fa52c6ed70c5490176c7dac6d3531e2a3eb7dc",
+  "originHash" : "2fa9e08747b4479221176df90a476a51d61469ac83016b082514ddc7f0cc61b8",
   "pins" : [
-    {
-      "identity" : "charts",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ChartsOrg/Charts.git",
-      "state" : {
-        "revision" : "dd9c72e3d7e751e769971092a6bd72d39198ae63",
-        "version" : "5.1.0"
-      }
-    },
-    {
-      "identity" : "pinlayout",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/layoutBox/PinLayout.git",
-      "state" : {
-        "revision" : "72f5300042618340df21500f6c4ce71bb78b93e1",
-        "version" : "1.10.6"
-      }
-    },
     {
       "identity" : "realm-core",
       "kind" : "remoteSourceControl",
