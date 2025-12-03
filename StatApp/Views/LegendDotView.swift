@@ -14,7 +14,7 @@ final class LegendDotView: UIView {
     private let titleLabel = UILabel()
     private let percentLabel = UILabel()
 
-    private let hStack = UIStackView()
+    // MARK: - Init
 
     init(title: String) {
         super.init(frame: .zero)
@@ -27,32 +27,56 @@ final class LegendDotView: UIView {
         setup()
     }
 
+    // MARK: - Setup
+
     private func setup() {
-        hStack.axis = .horizontal
-        hStack.spacing = 4
-        hStack.alignment = .center
+        addSubview(dotView)
+        addSubview(titleLabel)
+        addSubview(percentLabel)
 
         dotView.layer.cornerRadius = 4
         dotView.clipsToBounds = true
 
         titleLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        titleLabel.textColor = .black
+
         percentLabel.font = .systemFont(ofSize: 12, weight: .regular)
         percentLabel.textColor = .gray
-
-        addSubview(hStack)
-        hStack.addArrangedSubview(dotView)
-        hStack.addArrangedSubview(titleLabel)
-        hStack.addArrangedSubview(percentLabel)
     }
+
+    // MARK: - Layout
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        hStack.pin.all()
-        dotView.pin.width(8).height(8)
+
+        let dotSize: CGFloat = 8
+
+        dotView.pin
+            .vCenter()
+            .left(0)
+            .width(dotSize)
+            .height(dotSize)
+
+        titleLabel.pin
+            .left(to: dotView.edge.right).marginLeft(4)
+            .vCenter()
+            .sizeToFit()
+
+        percentLabel.pin
+            .left(to: titleLabel.edge.right).marginLeft(4)
+            .vCenter()
+            .sizeToFit()            
     }
+
+    override var intrinsicContentSize: CGSize {
+        CGSize(width: UIView.noIntrinsicMetric, height: 20)
+    }
+
+    // MARK: - Public
 
     func update(percent: Double, color: UIColor) {
         dotView.backgroundColor = color
-        percentLabel.text = "\(Int(percent))%"
+        percentLabel.text = "\(Int(round(percent)))%"
+        setNeedsLayout()
     }
 }

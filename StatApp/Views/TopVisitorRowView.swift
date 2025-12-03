@@ -51,7 +51,6 @@ final class TopVisitorRowView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        // ВНУТРЕННИЕ ОТСТУПЫ 16pt СЛЕВА/СПРАВА
         avatarView.pin
             .vCenter()
             .left(16)
@@ -79,7 +78,6 @@ final class TopVisitorRowView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        // Высота ячейки с нормальными вертикальными отступами
         return CGSize(width: UIView.noIntrinsicMetric, height: 64)
     }
 

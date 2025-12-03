@@ -27,14 +27,14 @@ final class GenderDonutChartView: UIView {
         addSubview(chartView)
 
         chartView.chartDescription.enabled = false
-        chartView.legend.enabled = false     // легенда не нужна
-        chartView.drawEntryLabelsEnabled = false // убираем подписи на сегментах  [oai_citation:6‡Stack Overflow](https://stackoverflow.com/questions/36713996/how-to-hide-labels-in-ios-charts?utm_source=chatgpt.com)
+        chartView.legend.enabled = false
+        chartView.drawEntryLabelsEnabled = false
 
-        chartView.holeRadiusPercent = 0.65   // превращаем Pie в donut
+        chartView.holeRadiusPercent = 0.65
         chartView.transparentCircleRadiusPercent = 0.7
         chartView.drawHoleEnabled = true
 
-        chartView.rotationAngle = 270        // чтобы начало было сверху
+        chartView.rotationAngle = 270        
         chartView.rotationEnabled = false
         chartView.highlightPerTapEnabled = false
     }

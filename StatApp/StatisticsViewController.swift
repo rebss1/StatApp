@@ -69,6 +69,11 @@ final class StatisticsViewController: UIViewController {
     private let watchersLeftRow = StatTrendRowView()
     private let watchersSeparatorView = UIView()
 
+    // MARK: - State
+
+    private var currentStats: EpisodeStatistics?
+    private var currentUsers: [EpisodeUser] = []
+    
     // MARK: - Init
 
     init() {
@@ -112,7 +117,21 @@ final class StatisticsViewController: UIViewController {
 
         scrollView.alwaysBounceVertical = true
         scrollView.refreshControl = refreshControl
-        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        refreshControl.addTarget(
+            self,
+            action: #selector(handleRefresh),
+            for: .valueChanged
+        )
+        visitorsPeriodSegmented.addTarget(
+            self,
+            action: #selector(handleVisitorsPeriodChanged),
+            for: .valueChanged
+        )
+        genderPeriodSegmented.addTarget(
+            self,
+            action: #selector(handleGenderPeriodChanged),
+            for: .valueChanged
+        )
     }
 
     private func setupHierarchy() {
@@ -331,19 +350,16 @@ final class StatisticsViewController: UIViewController {
             .top(y).horizontally(16)
             .height(200)
 
-        // Верхняя строка
         watchersNewRow.pin
             .top(0)
             .horizontally(0)
             .height(100)
 
-        // Разделитель на всю ширину карточки
         watchersSeparatorView.pin
             .below(of: watchersNewRow)
             .horizontally(0)
             .height(1)
 
-        // Нижняя строка
         watchersLeftRow.pin
             .below(of: watchersSeparatorView)
             .horizontally(0)
@@ -361,10 +377,21 @@ final class StatisticsViewController: UIViewController {
 
     // MARK: - Actions
 
-    @objc private func handleRefresh() {
+    @objc
+    private func handleRefresh() {
         loadData(forceRefresh: true)
     }
 
+    @objc
+    private func handleVisitorsPeriodChanged() {
+        updateVisitorsSection()
+    }
+
+    @objc
+    private func handleGenderPeriodChanged() {
+        updateGenderAgeSection()
+    }
+    
     // MARK: - Data
 
     private func loadData(forceRefresh: Bool) {
@@ -387,18 +414,108 @@ final class StatisticsViewController: UIViewController {
     }
 
     private func apply(stats: EpisodeStatistics, users: [EpisodeUser]) {
-        let visitorsValues = stats.visitorsByDay.map { $0.y }
-        let (trendText, trendColor) = visitorsTrendDescriptionAndColor(stats: stats)
+        currentStats = stats
+        currentUsers = users
+
+        updateVisitorsSection()
+        updateGenderAgeSection()
+        updateWatchersSection()
+        updateTopVisitorsSection()
+
+        view.setNeedsLayout()
+    }
+    
+    private func updateVisitorsSection() {
+        guard let stats = currentStats else { return }
+
+        let points: [VisitorsPoint]
+        switch visitorsPeriodSegmented.selectedSegmentIndex {
+        case 1:
+            points = stats.weeklyPoints
+        case 2:
+            points = stats.monthlyPoints
+        default:
+            points = stats.dailyPoints
+        }
+
+        guard
+            let firstY = points.first?.y,
+            let lastY = points.last?.y
+        else {
+            visitorsRowView.configure(
+                value: 0,
+                sparklineValues: [],
+                color: .gray,
+                description: "Нет данных по посетителям"
+            )
+            visitorsLineChartView.configure(points: [])
+            return
+        }
+
+        let values = points.map { $0.y }
+        let diff = lastY - firstY
+        let deltaValue = Int(round(abs(diff)))
+        let (trendText, trendColor) = visitorsTrendDescriptionAndColor(points: points)
+
         visitorsRowView.configure(
-            value: stats.visitorsTotal,
-            sparklineValues: visitorsValues,
+            value: deltaValue,
+            sparklineValues: values,
             color: trendColor,
             description: trendText
         )
-        visitorsLineChartView.configure(points: stats.visitorsByDay)
 
-        let maleCount = users.filter { $0.sex == "M" }.count
-        let femaleCount = users.filter { $0.sex == "W" }.count
+        visitorsLineChartView.configure(points: points)
+    }
+    
+    private func updateGenderAgeSection() {
+        guard let stats = currentStats else { return }
+        print("viewsByUser keys:", stats.viewsByUser.keys.sorted())
+        print("currentUsers ids:", currentUsers.map { $0.id }.sorted())
+        
+        let calendar = Calendar(identifier: .gregorian)
+        let allDates = stats.viewsByUser.values.flatMap { $0 }
+        guard let maxDate = allDates.max() else {
+            genderDonutView.configure(
+                shares: [
+                    GenderShare(value: 0, label: "Мужчины", color: .systemRed),
+                    GenderShare(value: 0, label: "Женщины", color: .systemOrange)
+                ]
+            )
+            maleLegendView.update(percent: 0, color: .systemRed)
+            femaleLegendView.update(percent: 0, color: .systemOrange)
+            ageStackView.subviews.forEach { $0.removeFromSuperview() }
+            return
+        }
+
+        let endDay = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: calendar.startOfDay(for: maxDate)
+        )!
+        let interval: DateInterval?
+        switch genderPeriodSegmented.selectedSegmentIndex {
+        case 0:
+            let start = calendar.startOfDay(for: maxDate)
+            interval = DateInterval(start: start, end: endDay)
+        case 1:
+            let start = calendar.date(byAdding: .day, value: -6, to: endDay)!
+            interval = DateInterval(start: start, end: endDay)
+        case 2:
+            let start = calendar.date(byAdding: .day, value: -29, to: endDay)!
+            interval = DateInterval(start: start, end: endDay)
+        default:
+            interval = nil
+        }
+
+        func userInPeriod(_ userId: Int) -> Bool {
+            guard let dates = stats.viewsByUser[userId], !dates.isEmpty else { return false }
+            guard let interval = interval else { return true }
+            return dates.contains(where: { interval.contains($0) })
+        }
+
+        let filteredUsers = currentUsers.filter { userInPeriod($0.id) }
+        let maleCount = filteredUsers.filter { $0.sex == "M" }.count
+        let femaleCount = filteredUsers.filter { $0.sex == "W" }.count
         let totalGender = maleCount + femaleCount
 
         let malePercent = totalGender > 0
@@ -410,55 +527,48 @@ final class StatisticsViewController: UIViewController {
 
         genderDonutView.configure(
             shares: [
-                GenderShare(value: malePercent, label: "Мужчины", color: GenderColors.male),
-                GenderShare(value: femalePercent, label: "Женщины", color: GenderColors.female)
+                GenderShare(value: malePercent, label: "Мужчины", color: .systemRed),
+                GenderShare(value: femalePercent, label: "Женщины", color: .systemOrange)
             ]
         )
-        maleLegendView.update(percent: malePercent, color: GenderColors.male)
-        femaleLegendView.update(percent: femalePercent, color: GenderColors.female)
+        maleLegendView.update(percent: malePercent, color: .systemRed)
+        femaleLegendView.update(percent: femalePercent, color: .systemOrange)
 
         ageStackView.subviews.forEach { $0.removeFromSuperview() }
 
-        // Пользователи с известным возрастом
-        let usersWithAge = users.filter { $0.age != nil }
+        let usersWithAgeAndSex: [(age: Int, sex: String)] =
+            filteredUsers.compactMap { user -> (age: Int, sex: String)? in
+                guard
+                    let age = user.age,
+                    let sex = user.sex
+                else {
+                    return nil
+                }
+                return (age: age, sex: sex)
+            }
 
-        // Диапазоны возрастов, как в дизайне
+        let totalMalesWithAge = usersWithAgeAndSex.filter { $0.sex == "M" }.count
+        let totalFemalesWithAge = usersWithAgeAndSex.filter { $0.sex == "W" }.count
+
         let ageRanges: [(title: String, range: ClosedRange<Int>)] = [
-            ("18-21", 18...21),
-            ("22-25", 22...25),
-            ("26-30", 26...30),
-            ("31-35", 31...35),
-            ("36-40", 36...40),
-            ("40-50", 40...50),
-            (">50", 51...150)
+            ("0-17", 0...17),
+            ("18-24", 18...24),
+            ("25-34", 25...34),
+            ("35-44", 35...44),
+            ("45+", 45...150)
         ]
 
-        // Общее количество мужчин и женщин с возрастом — чтобы проценты в сумме давали 100% по каждому полу
-        let totalMalesWithAge = usersWithAge.filter { $0.sex == "M" }.count
-        let totalFemalesWithAge = usersWithAge.filter { $0.sex == "W" }.count
-
         for item in ageRanges {
-            let usersInRange = usersWithAge.filter { user in
-                guard let age = user.age else { return false }
-                return item.range.contains(age)
-            }
+            let malesInRange = usersWithAgeAndSex.filter { $0.sex == "M" && item.range.contains($0.age) }.count
+            let femalesInRange = usersWithAgeAndSex.filter { $0.sex == "W" && item.range.contains($0.age) }.count
 
-            let malesInRange = usersInRange.filter { $0.sex == "M" }.count
-            let femalesInRange = usersInRange.filter { $0.sex == "W" }.count
+            let malePercent = totalMalesWithAge > 0
+                ? Double(malesInRange) / Double(totalMalesWithAge) * 100.0
+                : 0
 
-            let malePercent: Double
-            if totalMalesWithAge > 0 {
-                malePercent = Double(malesInRange) / Double(totalMalesWithAge) * 100.0
-            } else {
-                malePercent = 0
-            }
-
-            let femalePercent: Double
-            if totalFemalesWithAge > 0 {
-                femalePercent = Double(femalesInRange) / Double(totalFemalesWithAge) * 100.0
-            } else {
-                femalePercent = 0
-            }
+            let femalePercent = totalFemalesWithAge > 0
+                ? Double(femalesInRange) / Double(totalFemalesWithAge) * 100.0
+                : 0
 
             let row = AgeGroupRowView()
             row.configure(
@@ -468,6 +578,10 @@ final class StatisticsViewController: UIViewController {
             )
             ageStackView.addSubview(row)
         }
+    }
+    
+    private func updateWatchersSection() {
+        guard let stats = currentStats else { return }
 
         watchersNewRow.configure(
             value: stats.watchersNew,
@@ -482,28 +596,30 @@ final class StatisticsViewController: UIViewController {
             color: .systemRed,
             description: "Пользователи перестали за вами наблюдать"
         )
-
+    }
+    
+    private func updateTopVisitorsSection() {
         topVisitorsStackView.subviews.forEach { $0.removeFromSuperview() }
 
-        let topUsers = Array(users.prefix(3))
-        for (index, user) in topUsers.enumerated() {
+        let maxCount = min(3, currentUsers.count)
+
+        for (index, user) in currentUsers.prefix(maxCount).enumerated() {
             let row = TopVisitorRowView()
             row.configure(name: user.name, age: user.age)
             topVisitorsStackView.addSubview(row)
-            if index < topUsers.count - 1 {
+
+            if index < maxCount - 1 {
                 let separator = UIView()
                 separator.backgroundColor = .systemGray5
                 topVisitorsStackView.addSubview(separator)
             }
         }
-
-        view.setNeedsLayout()
     }
-
-    private func visitorsTrendDescriptionAndColor(stats: EpisodeStatistics) -> (String, UIColor) {
+    
+    private func visitorsTrendDescriptionAndColor(points: [VisitorsPoint]) -> (String, UIColor) {
         guard
-            let first = stats.visitorsByDay.first?.y,
-            let last = stats.visitorsByDay.last?.y,
+            let first = points.first?.y,
+            let last = points.last?.y,
             first > 0
         else {
             return ("Количество посетителей не изменилось", .gray)

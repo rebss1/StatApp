@@ -13,6 +13,8 @@ final class VisitorsLineChartView: UIView {
 
     private let chartView = LineChartView()
 
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupChart()
@@ -23,47 +25,77 @@ final class VisitorsLineChartView: UIView {
         setupChart()
     }
 
+    // MARK: - Setup
+
     private func setupChart() {
         addSubview(chartView)
 
-        // Общий стиль
+        backgroundColor = .clear
+        chartView.backgroundColor = .clear
+
         chartView.chartDescription.enabled = false
-        chartView.legend.enabled = false  // легенда не нужна  [oai_citation:2‡Stack Overflow](https://stackoverflow.com/questions/36713996/how-to-hide-labels-in-ios-charts?utm_source=chatgpt.com)
+        chartView.legend.enabled = false
         chartView.rightAxis.enabled = false
+        chartView.doubleTapToZoomEnabled = false
+        chartView.setScaleEnabled(false)
 
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
-        xAxis.drawGridLinesEnabled = false
+        xAxis.drawGridLinesEnabled = true
+        xAxis.granularityEnabled = true
+        xAxis.granularity = 1
+        xAxis.axisMinimum = 0
+        xAxis.valueFormatter = DefaultAxisValueFormatter(decimals: 0)
 
         let leftAxis = chartView.leftAxis
         leftAxis.drawGridLinesEnabled = true
         leftAxis.gridLineWidth = 0.5
         leftAxis.axisMinimum = 0
-
-        // Жесты
-        chartView.doubleTapToZoomEnabled = false
-        chartView.setScaleEnabled(false)
+        leftAxis.granularityEnabled = true
+        leftAxis.granularity = 1
     }
+
+    // MARK: - Layout
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        chartView.frame = bounds   // или chartView.pin.all()
+        chartView.frame = bounds
     }
 
+    // MARK: - Public
+
     func configure(points: [VisitorsPoint]) {
-        let entries = points.map { ChartDataEntry(x: $0.x, y: $0.y) }
+        guard !points.isEmpty else {
+            chartView.data = nil
+            return
+        }
 
-        let set = LineChartDataSet(entries: entries, label: "") // линия графика  [oai_citation:3‡Medium](https://medium.com/%40OsianSmith/creating-a-line-chart-in-swift-3-and-ios-10-2f647c95392e?utm_source=chatgpt.com)
-        set.mode = .cubicBezier
-        set.lineWidth = 2
-        set.drawCirclesEnabled = true
-        set.circleRadius = 3
-        set.drawValuesEnabled = false
-        set.colors = [.systemRed]
-        set.circleColors = [.systemRed]
+        let entries: [ChartDataEntry] = points.enumerated().map { index, point in
+            ChartDataEntry(x: Double(index), y: point.y)
+        }
 
-        let data = LineChartData(dataSet: set)
+        let dataSet = LineChartDataSet(entries: entries, label: "")
+        dataSet.mode = LineChartDataSet.Mode.cubicBezier
+        dataSet.lineWidth = 2
+        dataSet.drawCirclesEnabled = true
+        dataSet.circleRadius = 3
+        dataSet.drawValuesEnabled = false
+        dataSet.setColor(UIColor.systemRed)
+        dataSet.setCircleColor(UIColor.systemRed)
+
+        let data = LineChartData(dataSet: dataSet)
         chartView.data = data
-        chartView.animate(xAxisDuration: 0.3, yAxisDuration: 0.3)
+
+        let maxX = Double(points.count - 1)
+        chartView.xAxis.axisMinimum = 0
+        chartView.xAxis.axisMaximum = maxX
+
+        if let maxY = points.map({ $0.y }).max() {
+            let top = max(maxY, 1)
+            chartView.leftAxis.axisMaximum = ceil(top)
+        }
+
+        chartView.notifyDataSetChanged()
+        chartView.animate(xAxisDuration: 0.25, yAxisDuration: 0.25)
     }
 }
