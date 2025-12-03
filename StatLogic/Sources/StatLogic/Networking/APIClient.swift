@@ -27,8 +27,6 @@ public final class APIClient: APIClientProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = endpoint.method.rawValue
 
-        request.setValue("beget=begetok", forHTTPHeaderField: "Cookie")
-
         return Single<T>.create { [session] single in
             let task = session.dataTask(with: request) { data, response, error in
                 if let error = error {

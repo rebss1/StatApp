@@ -82,6 +82,7 @@ final class StatTrendRowView: UIView {
         arrowImageView.tintColor = color
         descriptionLabel.text = description
         sparklineView.configure(values: sparklineValues, color: color)
+        setNeedsLayout()
     }
 
     func setShowsSeparator(_ show: Bool) {

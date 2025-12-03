@@ -56,20 +56,17 @@ final class TopVisitorRowView: UIView {
             .left(16)
             .width(40)
             .height(40)
-
-        initialsLabel.pin.all()
-
+        initialsLabel.pin
+            .all()
         chevronView.pin
             .vCenter()
             .right(16)
             .sizeToFit()
-
         nameLabel.pin
             .top(8)
             .left(to: avatarView.edge.right).marginLeft(12)
             .right(to: chevronView.edge.left).marginRight(8)
             .height(20)
-
         ageLabel.pin
             .below(of: nameLabel, aligned: .left)
             .marginTop(2)
@@ -89,5 +86,6 @@ final class TopVisitorRowView: UIView {
             ageLabel.text = nil
         }
         initialsLabel.text = String(name.prefix(1)).uppercased()
+        setNeedsLayout()
     }
 }

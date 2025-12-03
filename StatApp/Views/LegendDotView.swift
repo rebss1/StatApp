@@ -10,6 +10,8 @@ import PinLayout
 
 final class LegendDotView: UIView {
 
+    // MARK: - Properties
+
     private let dotView = UIView()
     private let titleLabel = UILabel()
     private let percentLabel = UILabel()
@@ -50,18 +52,15 @@ final class LegendDotView: UIView {
         super.layoutSubviews()
 
         let dotSize: CGFloat = 8
-
         dotView.pin
             .vCenter()
             .left(0)
             .width(dotSize)
             .height(dotSize)
-
         titleLabel.pin
             .left(to: dotView.edge.right).marginLeft(4)
             .vCenter()
             .sizeToFit()
-
         percentLabel.pin
             .left(to: titleLabel.edge.right).marginLeft(4)
             .vCenter()

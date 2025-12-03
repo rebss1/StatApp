@@ -11,18 +11,6 @@ public struct EpisodeStatisticsDTO: Codable {
     public let statistics: [EpisodeStatItemDTO]
 }
 
-public struct EpisodeStatItemDTO: Codable {
-    public let userId: Int?
-    public let type: EpisodeStatType
-    public let dates: [Int]
-}
-
-public enum EpisodeStatType: String, Codable {
-    case view
-    case subscription
-    case unsubscription
-}
-
 extension EpisodeStatisticsDTO {
     func toDomain() -> EpisodeStatistics {
         let calendar = Calendar(identifier: .gregorian)

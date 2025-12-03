@@ -58,7 +58,6 @@ final class StatisticsViewController: UIViewController {
     private let maleLegendView = LegendDotView(title: "Мужчины")
     private let femaleLegendView = LegendDotView(title: "Женщины")
     private let genderDividerView = UIView()
-
     private let ageStackView = UIStackView()
 
     // MARK: - Watchers section
@@ -194,7 +193,6 @@ final class StatisticsViewController: UIViewController {
 
         visitorsSectionTitleLabel.text = "Посетители"
         visitorsSectionTitleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
-
 
         visitorsPeriodSegmented.selectedSegmentIndex = 0
 
@@ -469,9 +467,6 @@ final class StatisticsViewController: UIViewController {
     
     private func updateGenderAgeSection() {
         guard let stats = currentStats else { return }
-        print("viewsByUser keys:", stats.viewsByUser.keys.sorted())
-        print("currentUsers ids:", currentUsers.map { $0.id }.sorted())
-        
         let calendar = Calendar(identifier: .gregorian)
         let allDates = stats.viewsByUser.values.flatMap { $0 }
         guard let maxDate = allDates.max() else {

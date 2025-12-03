@@ -7,10 +7,6 @@
 
 import Foundation
 
-public struct EpisodeUsersDTO: Decodable {
-    public let users: [EpisodeUserDTO]
-}
-
 public struct EpisodeUserDTO: Decodable {
     public let id: Int
     public let sex: String
@@ -18,12 +14,6 @@ public struct EpisodeUserDTO: Decodable {
     public let isOnline: Bool
     public let age: Int
     public let files: [EpisodeUserFileDTO]
-}
-
-public struct EpisodeUserFileDTO: Decodable {
-    public let id: Int
-    public let url: String
-    public let type: String
 }
 
 extension EpisodeUserDTO {

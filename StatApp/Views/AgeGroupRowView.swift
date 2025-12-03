@@ -10,11 +10,11 @@ import PinLayout
 
 final class AgeGroupRowView: UIView {
 
-    private let titleLabel = UILabel()
+    // MARK: - Properties
 
+    private let titleLabel = UILabel()
     private let firstPercentLabel = UILabel()
     private let secondPercentLabel = UILabel()
-
     private let firstBarBackgroundView = UIView()
     private let firstBarFillView = UIView()
     private let secondBarBackgroundView = UIView()
@@ -132,8 +132,7 @@ final class AgeGroupRowView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        let height: CGFloat = 8 + 4 + 10 + 4 + 8
-        return CGSize(width: UIView.noIntrinsicMetric, height: height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 34)
     }
 
     // MARK: - Configure
@@ -145,7 +144,6 @@ final class AgeGroupRowView: UIView {
         titleLabel.text = title
         firstPercentLabel.text = "\(Int(round(firstPercent)))%"
         secondPercentLabel.text = "\(Int(round(secondPercent)))%"
-
         setNeedsLayout()
     }
 }
